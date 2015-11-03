@@ -5,12 +5,11 @@
 IMGTableModel::IMGTableModel(QObject *parent)
 	:QAbstractTableModel(parent)
 {
-	m_ArchiveTable.reserve(20000);
 }
 
 int IMGTableModel::rowCount(const QModelIndex &parent) const
 {
-	return m_ArchiveTable.size();
+	return m_IMGDirectory.size();
 }
 
 int IMGTableModel::columnCount(const QModelIndex &parent) const
@@ -29,9 +28,9 @@ QVariant IMGTableModel::headerData(int section, Qt::Orientation orientation, int
 		case 1:
 			return "大小(KB)";
 		case 2:
-			return "偏移量";
-		case 3:
 			return "序号";
+		case 3:
+			return "偏移量";
 		default:
 			break;
 		}
@@ -47,38 +46,32 @@ QVariant IMGTableModel::data(const QModelIndex &index, int role) const
 		switch (index.column())
 		{
 		case 0:
-			return m_ArchiveTable.at(index.row()).Name;
+			return m_IMGDirectory.at(index.row()).m_RawData.m_Name;
 		case 1:
-			return m_ArchiveTable.at(index.row()).SizeSecondPriority * IMGClass::IMG_BLOCK_SIZE / 1024;
+			return m_IMGDirectory.at(index.row()).m_RawData.m_SizeLow16 * IMGClass::IMG_BLOCK_SIZE / 1024;
 		case 2:
-			return m_ArchiveTable.at(index.row()).Position * IMGClass::IMG_BLOCK_SIZE;
-		case 3:
 			return index.row();
+		case 3:
+			return m_IMGDirectory.at(index.row()).m_RawData.m_Offset * IMGClass::IMG_BLOCK_SIZE;
+
 		default:
 			break;
 		}
 	}
 	else if (role == Qt::TextAlignmentRole)
 	{
-		switch (index.column())
-		{
-		case 0:
+		if (index.column() == 0)
 			return int(Qt::AlignLeft | Qt::AlignVCenter);
-		case 1:
-		case 2:
-		case 3:
+		else
 			return int(Qt::AlignHCenter | Qt::AlignVCenter);
-		default:
-			break;
-		}
 	}
 
 	return QVariant();
 }
 
-void IMGTableModel::SetTableData(const std::vector<IMGClass::IMGTableItem> &source)
+void IMGTableModel::SetSourceData(const std::vector<IMGClass::IMGDirectoryEntryWrap> &source)
 {
 	beginResetModel();
-	m_ArchiveTable = source;
+	m_IMGDirectory = source;
 	endResetModel();
 }

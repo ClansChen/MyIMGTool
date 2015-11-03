@@ -1,7 +1,7 @@
 ﻿#pragma execution_character_set("utf-8")
 
 #include "myimgtool.h"
-#include <QtWidgets/QApplication>
+#include <QApplication>
 
 int main(int argc, char *argv[])
 {
@@ -10,9 +10,9 @@ int main(int argc, char *argv[])
 	window.show();
 
 	if (argc > 1)
-		window.OpenArchive(QString::fromLocal8Bit(argv[1]));
+		window.OpenIMG(QString::fromLocal8Bit(argv[1]));
 	else
-		window.OpenArchive(R"(D:\游戏\Grand Theft Auto San Andreas\models\gta3.img)");
+		window.OpenIMG("D:/ver2.img");
 
 	return a.exec();
 }
