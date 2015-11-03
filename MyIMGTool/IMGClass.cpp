@@ -149,13 +149,13 @@ void IMGClass::ImportFiles(const QStringList &paths)
 		importFile.setFileName(path);
 		if (!importFile.open(QIODevice::ReadOnly))
 		{
-			emit ErrorOccoured({ "打开", path, "失败" });
+			emit ErrorOccoured({ "打开 ", path, " 失败" });
 			break;
 		}
 
 		if (importFile.size() > MAX_FILE_SIZE)
 		{
-			emit ErrorOccoured({ "文件", path, "太大" });
+			emit ErrorOccoured({ "文件 ", path, " 太大" });
 			break;
 		}
 
@@ -164,7 +164,7 @@ void IMGClass::ImportFiles(const QStringList &paths)
 		narrowFileName = wideFileName.toStdString();
 		if (narrowFileName.length() > 23)
 		{
-			emit ErrorOccoured({ "文件名", wideFileName, "太长" });
+			emit ErrorOccoured({ "文件名 ", wideFileName, " 太长" });
 			break;
 		}
 
@@ -221,7 +221,7 @@ void IMGClass::ExportFiles(const QString &dest, const QModelIndexList &indexes)
 		exportFile.setFileName(destFolder.absoluteFilePath(fileName));
 		if (!exportFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
 		{
-			emit ErrorOccoured({ "创建", exportFile.fileName(), "失败" });
+			emit ErrorOccoured({ "创建 ", exportFile.fileName(), " 失败" });
 			return;
 		}
 

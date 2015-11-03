@@ -9,7 +9,6 @@ class IMGClass :public QObject
 	Q_OBJECT
 
 public:
-
 #pragma pack(push, 1)
 	struct IMGDirectoryEntry
 	{
@@ -75,15 +74,15 @@ private:
 
 	quint32 m_Version2IMGDirectoryFreeSlotsCount;
 
-	static quint32 AlignOffsetToBlocks(qint64 offset);
-	quint32 GetFirstWritingBlockForRebuilding();
-	void WriteVersion1IMGDirectory(QFile &file);
-	void WriteVersion2IMGDirectory(QFile &file);
-	void WriteIMGDirectory();
-	void GetVersion2IMGDirectoryFreeSlotsCount();
-	void MakeIMGDirectoryFreeSlots();
-	quint32 GetIMGDirectoryEntryIndexByName(const char *name);
-	void WriteIMGDirectoryEntry(const IMGDirectoryEntry &data, quint32 index);
+	static quint32	AlignOffsetToBlocks(qint64 offset);
+	quint32			GetFirstWritingBlockForRebuilding();
+	void			WriteVersion1IMGDirectory(QFile &file);
+	void			WriteVersion2IMGDirectory(QFile &file);
+	void			WriteIMGDirectory();
+	void			GetVersion2IMGDirectoryFreeSlotsCount();
+	void			MakeIMGDirectoryFreeSlots();
+	quint32			GetIMGDirectoryEntryIndexByName(const char *name);
+	void			WriteIMGDirectoryEntry(const IMGDirectoryEntry &data, quint32 index);
 
 signals:
 	void IncreaseProgressBar();

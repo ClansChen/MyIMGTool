@@ -1,6 +1,7 @@
 ﻿#pragma execution_character_set("utf-8")
 
 #include "myimgtool.h"
+#include "IMGClass.h"
 #include "IMGTableModel.h"
 #include <QSortFilterProxyModel>
 #include <QFileDialog>
@@ -40,16 +41,17 @@ MYIMGTOOL::MYIMGTOOL(QWidget *parent)
 	connect(ui.action_close, &QAction::triggered, this, &MYIMGTOOL::CloseIMG);
 	connect(ui.action_exit, &QAction::triggered, &QApplication::quit);
 	connect(ui.action_import, &QAction::triggered,this, &MYIMGTOOL::ImportFilesDialog);
+	connect(ui.action_import_folder, &QAction::triggered, this, &MYIMGTOOL::ImportFolderDialog);
 	connect(ui.action_export, &QAction::triggered, this, &MYIMGTOOL::ExportFilesDialog);
 	connect(ui.action_delete, &QAction::triggered, this, &MYIMGTOOL::RemoveFiles);
 	connect(ui.action_rebuild, &QAction::triggered, this, &MYIMGTOOL::RebuildIMG);
 	connect(ui.action_showinfo, &QAction::triggered, this, &MYIMGTOOL::ShowAbout);
 	connect(ui.action_showqtinfo, &QAction::triggered, this, &MYIMGTOOL::ShowAboutQt);
 
+	connect(m_pIMGClass, &IMGClass::IncreaseProgressBar, this, &MYIMGTOOL::IncProgressBar);
 	connect(m_pIMGClass, &IMGClass::ImportingFileFullPath, m_pProgressDialog, &QProgressDialog::setLabelText);
 	connect(m_pIMGClass, &IMGClass::ExportingFileName, m_pProgressDialog, &QProgressDialog::setLabelText);
 	connect(m_pIMGClass, &IMGClass::RebuildingFileName, m_pProgressDialog, &QProgressDialog::setLabelText);
-	connect(m_pIMGClass, &IMGClass::IncreaseProgressBar, this,&MYIMGTOOL::IncProgress);
 	connect(m_pIMGClass, &IMGClass::IMGDirectoryChanged, this, &MYIMGTOOL::RefreshTableView);
 	connect(m_pIMGClass, &IMGClass::ErrorOccoured, this, &MYIMGTOOL::RaiseErrorMessage);
 
@@ -125,6 +127,66 @@ void MYIMGTOOL::CloseIMG()
 	setWindowTitle("MYIMGTOOL");
 }
 
+void MYIMGTOOL::ImportFiles(const QStringList &paths)
+{
+	if (paths.isEmpty())
+		return;
+
+	m_pProgressDialog->setWindowTitle("正在导入");
+
+	m_pProgressDialog->setRange(0, paths.size());
+
+	m_pProgressDialog->setValue(0);
+
+	m_pProgressDialog->show();
+
+	m_pIMGClass->ImportFiles(paths);
+
+	m_pProgressDialog->hide();
+}
+
+void MYIMGTOOL::ImportFilesDialog()
+{
+	ImportFiles(QFileDialog::getOpenFileNames(this, "选择要导入的文件", "/", "所有文件 (*.*)"));
+}
+
+void MYIMGTOOL::ImportFolderDialog()
+{
+	QString folder = QFileDialog::getExistingDirectory(this, "选择要导入的文件夹", "/");
+
+	if (folder.isEmpty())
+		return;
+
+	ImportFiles(GetFilePathListOfFolder(folder));
+}
+
+void MYIMGTOOL::ExportFiles(const QString &dest)
+{
+	QModelIndexList indexes = ui.tableView->selectionModel()->selectedRows();
+
+	if (dest.isEmpty() || indexes.isEmpty())
+		return;
+
+	MapIndexesToSource(indexes);
+
+	m_pProgressDialog->setWindowTitle("正在导出");
+
+	m_pProgressDialog->setRange(0, indexes.size());
+
+	m_pProgressDialog->setValue(0);
+
+	m_pProgressDialog->show();
+
+	m_pIMGClass->ExportFiles(dest, indexes);
+
+	m_pProgressDialog->hide();
+}
+
+void MYIMGTOOL::ExportFilesDialog()
+{
+	ExportFiles(QFileDialog::getExistingDirectory(this, "选择导出文件存放的文件夹", "/"));
+}
+
 void MYIMGTOOL::RemoveFiles()
 {
 	QModelIndexList indexes = ui.tableView->selectionModel()->selectedRows();
@@ -193,7 +255,6 @@ void MYIMGTOOL::RaiseErrorMessage(std::initializer_list<QString> args)
 	QMessageBox::critical(nullptr, "错误", message);
 }
 
-
 void MYIMGTOOL::MapIndexesToSource(QModelIndexList &indexes)
 {
 	for (auto &index:indexes)
@@ -206,27 +267,6 @@ void MYIMGTOOL::RefreshTableView(const std::vector<IMGClass::IMGDirectoryEntryWr
 	ui.tableView->repaint();
 }
 
-void MYIMGTOOL::ImportFiles(const QStringList &paths)
-{
-	if (paths.isEmpty())
-		return;
-
-	m_pProgressDialog->setWindowTitle("正在导入");
-
-	m_pProgressDialog->setRange(0, paths.size());
-
-	m_pProgressDialog->show();
-
-	m_pIMGClass->ImportFiles(paths);
-
-	m_pProgressDialog->hide();
-}
-
-void MYIMGTOOL::ImportFilesDialog()
-{
-	ImportFiles(QFileDialog::getOpenFileNames(this, "选择要导入的文件", "/", "所有文件 (*.*)"));
-}
-
 QStringList MYIMGTOOL::GetFilePathListOfFolder(const QDir &dir)
 {
 	QStringList result;
@@ -235,31 +275,6 @@ QStringList MYIMGTOOL::GetFilePathListOfFolder(const QDir &dir)
 		result += subfile.absoluteFilePath();
 
 	return result;
-}
-
-void MYIMGTOOL::ExportFiles(const QString &dest)
-{
-	QModelIndexList indexes = ui.tableView->selectionModel()->selectedRows();
-	
-	if (dest.isEmpty() || indexes.isEmpty())
-		return;
-
-	MapIndexesToSource(indexes);
-
-	m_pProgressDialog->setWindowTitle("正在导出");
-
-	m_pProgressDialog->setRange(0, indexes.size());
-
-	m_pProgressDialog->show();
-
-	m_pIMGClass->ExportFiles(dest, indexes);
-
-	m_pProgressDialog->hide();
-}
-
-void MYIMGTOOL::ExportFilesDialog()
-{
-	ExportFiles(QFileDialog::getExistingDirectory(this, "选择导出文件存放的文件夹", "/"));
 }
 
 void MYIMGTOOL::dragEnterEvent(QDragEnterEvent *event)
@@ -294,7 +309,7 @@ void MYIMGTOOL::dropEvent(QDropEvent *event)
 	ImportFiles(paths);
 }
 
-void MYIMGTOOL::IncProgress()
+void MYIMGTOOL::IncProgressBar()
 {
 	m_pProgressDialog->setValue(m_pProgressDialog->value() + 1);
 }
