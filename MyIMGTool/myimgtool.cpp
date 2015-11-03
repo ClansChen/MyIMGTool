@@ -6,7 +6,7 @@
 #include <QSortFilterProxyModel>
 #include <QFileDialog>
 #include <QMessageBox>
-#include <QProgressDialog>
+#include "MyProgressDialog.h"
 #include <QMimeData>
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -30,8 +30,10 @@ MYIMGTOOL::MYIMGTOOL(QWidget *parent)
 	ui.action_new_ver1->setIcon(QIcon(":/MyIMGTool/Resources/vc.png"));
 	ui.action_new_ver2->setIcon(QIcon(":/MyIMGTool/Resources/sa.png"));
 
-	m_pProgressDialog = new QProgressDialog("", QString(), 0, 1, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
+	m_pProgressDialog = new MyProgressDialog("", QString(), 0, 1, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 	m_pProgressDialog->setWindowModality(Qt::WindowModal);
+	m_pProgressDialog->setMinimumDuration(500);
+	m_pProgressDialog->close();
 
 	m_pIMGClass = new IMGClass(this);
 
@@ -49,9 +51,9 @@ MYIMGTOOL::MYIMGTOOL(QWidget *parent)
 	connect(ui.action_showqtinfo, &QAction::triggered, this, &MYIMGTOOL::ShowAboutQt);
 
 	connect(m_pIMGClass, &IMGClass::IncreaseProgressBar, this, &MYIMGTOOL::IncProgressBar);
-	connect(m_pIMGClass, &IMGClass::ImportingFileFullPath, m_pProgressDialog, &QProgressDialog::setLabelText);
-	connect(m_pIMGClass, &IMGClass::ExportingFileName, m_pProgressDialog, &QProgressDialog::setLabelText);
-	connect(m_pIMGClass, &IMGClass::RebuildingFileName, m_pProgressDialog, &QProgressDialog::setLabelText);
+	connect(m_pIMGClass, &IMGClass::ImportingFileFullPath, m_pProgressDialog, &MyProgressDialog::setLabelText);
+	connect(m_pIMGClass, &IMGClass::ExportingFileName, m_pProgressDialog, &MyProgressDialog::setLabelText);
+	connect(m_pIMGClass, &IMGClass::RebuildingFileName, m_pProgressDialog, &MyProgressDialog::setLabelText);
 	connect(m_pIMGClass, &IMGClass::IMGDirectoryChanged, this, &MYIMGTOOL::RefreshTableView);
 	connect(m_pIMGClass, &IMGClass::ErrorOccoured, this, &MYIMGTOOL::RaiseErrorMessage);
 
@@ -138,11 +140,11 @@ void MYIMGTOOL::ImportFiles(const QStringList &paths)
 
 	m_pProgressDialog->setValue(0);
 
-	m_pProgressDialog->show();
+	m_pProgressDialog->open();
 
 	m_pIMGClass->ImportFiles(paths);
 
-	m_pProgressDialog->hide();
+	m_pProgressDialog->close();
 }
 
 void MYIMGTOOL::ImportFilesDialog()
@@ -175,11 +177,11 @@ void MYIMGTOOL::ExportFiles(const QString &dest)
 
 	m_pProgressDialog->setValue(0);
 
-	m_pProgressDialog->show();
+	m_pProgressDialog->open();
 
 	m_pIMGClass->ExportFiles(dest, indexes);
 
-	m_pProgressDialog->hide();
+	m_pProgressDialog->close();
 }
 
 void MYIMGTOOL::ExportFilesDialog()
@@ -205,11 +207,11 @@ void MYIMGTOOL::RebuildIMG()
 
 	m_pProgressDialog->setRange(0, m_pIMGClass->GetFilesCount());
 
-	m_pProgressDialog->show();
+	m_pProgressDialog->open();
 
 	m_pIMGClass->RebuildIMG();
 
-	m_pProgressDialog->hide();
+	m_pProgressDialog->close();
 
 	OpenIMG(m_pIMGClass->GetIMGFullPath());
 }

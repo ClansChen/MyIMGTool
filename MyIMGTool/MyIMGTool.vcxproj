@@ -99,6 +99,7 @@
     <ClCompile Include="IMGTableModel.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="myimgtool.cpp" />
+    <ClCompile Include="MyProgressDialog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="myimgtool.h">
@@ -127,6 +128,7 @@
   <ItemGroup>
     <ClInclude Include="CKeyGen.h" />
     <ClInclude Include="GeneratedFiles\ui_myimgtool.h" />
+    <ClInclude Include="MyProgressDialog.h" />
     <CustomBuild Include="IMGClass.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing IMGClass.h...</Message>

@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include <QAbstractTableModel>
-#include "myimgtool.h"
 #include "IMGClass.h"
 #include <vector>
 
