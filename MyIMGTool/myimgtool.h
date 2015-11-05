@@ -30,7 +30,6 @@ public:
 	void RemoveFiles();
 	void RebuildIMG();
 
-	void ShowAbout();
 	void ShowAboutQt();
 
 	void FilterTable(const QString &);

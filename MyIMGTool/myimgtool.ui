@@ -17,7 +17,7 @@
    </rect>
   </property>
   <property name="acceptDrops">
-   <bool>true</bool>
+   <bool>false</bool>
   </property>
   <property name="windowTitle">
    <string>MYIMGTOOL</string>
@@ -185,7 +185,6 @@ selection-background-color: rgb(0, 170, 255);</string>
     <property name="title">
      <string>杂项(&amp;M)</string>
     </property>
-    <addaction name="action_showinfo"/>
     <addaction name="action_showqtinfo"/>
    </widget>
    <addaction name="menu_file"/>

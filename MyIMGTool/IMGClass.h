@@ -23,7 +23,6 @@ public:
 	{
 		IMGDirectoryEntry m_RawData;
 		quint32 m_NameHash;
-		bool m_ImportedRecently = false;
 
 		IMGDirectoryEntryWrap(const IMGDirectoryEntry &raw);
 	};
@@ -34,16 +33,7 @@ public:
 		VERSION1,
 		VERSION2
 	};
-
-	enum ErrorType
-	{
-		NO_ERROR,
-		OPEN_ERROR,
-		CREATE_ERROR,
-		INVALID_SIZE,
-		REBUILD_CREATE_ERROR
-	};
-
+	
 	static const qint64 IMG_BLOCK_SIZE = 2048;
 	static const qint64 MAX_FILE_SIZE = 0xFFFF * IMG_BLOCK_SIZE;
 	static const qint64 MAX_IMG_SIZE = 0xFFFFFFFF * IMG_BLOCK_SIZE;

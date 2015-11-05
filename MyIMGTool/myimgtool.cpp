@@ -31,8 +31,7 @@ MYIMGTOOL::MYIMGTOOL(QWidget *parent)
 	ui.action_new_ver2->setIcon(QIcon(":/MyIMGTool/Resources/sa.png"));
 
 	m_pProgressDialog = new MyProgressDialog("", QString(), 0, 1, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
-	m_pProgressDialog->setWindowModality(Qt::WindowModal);
-	m_pProgressDialog->setMinimumDuration(500);
+	setWindowModality(Qt::WindowModal);
 	m_pProgressDialog->close();
 
 	m_pIMGClass = new IMGClass(this);
@@ -47,7 +46,6 @@ MYIMGTOOL::MYIMGTOOL(QWidget *parent)
 	connect(ui.action_export, &QAction::triggered, this, &MYIMGTOOL::ExportFilesDialog);
 	connect(ui.action_delete, &QAction::triggered, this, &MYIMGTOOL::RemoveFiles);
 	connect(ui.action_rebuild, &QAction::triggered, this, &MYIMGTOOL::RebuildIMG);
-	connect(ui.action_showinfo, &QAction::triggered, this, &MYIMGTOOL::ShowAbout);
 	connect(ui.action_showqtinfo, &QAction::triggered, this, &MYIMGTOOL::ShowAboutQt);
 
 	connect(m_pIMGClass, &IMGClass::IncreaseProgressBar, this, &MYIMGTOOL::IncProgressBar);
@@ -159,7 +157,15 @@ void MYIMGTOOL::ImportFolderDialog()
 	if (folder.isEmpty())
 		return;
 
-	ImportFiles(GetFilePathListOfFolder(folder));
+	QStringList paths = GetFilePathListOfFolder(folder);
+
+	if (paths.isEmpty())
+	{
+		RaiseErrorMessage({ "没有文件可以导入" });
+		return;
+	}
+
+	ImportFiles(paths);
 }
 
 void MYIMGTOOL::ExportFiles(const QString &dest)
@@ -214,11 +220,6 @@ void MYIMGTOOL::RebuildIMG()
 	m_pProgressDialog->close();
 
 	OpenIMG(m_pIMGClass->GetIMGFullPath());
-}
-
-void MYIMGTOOL::ShowAbout()
-{
-	QMessageBox::information(this, "测试", "测试");
 }
 
 void MYIMGTOOL::ShowAboutQt()
@@ -306,7 +307,10 @@ void MYIMGTOOL::dropEvent(QDropEvent *event)
 	}
 
 	if (paths.isEmpty())
+	{
 		RaiseErrorMessage({ "没有文件可以导入" });
+		return;
+	}
 
 	ImportFiles(paths);
 }
