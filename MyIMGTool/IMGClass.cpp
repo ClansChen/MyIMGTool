@@ -178,9 +178,7 @@ void IMGClass::ImportFiles(const QStringList &paths)
 		tempEntry.m_Offset = AlignOffsetToBlocks(m_IMGHandle.size());
 		m_IMGHandle.seek(tempEntry.m_Offset * IMG_BLOCK_SIZE);
 		m_IMGHandle.write(importFile.readAll());
-#if 0
-		m_IMGHandle.seek(AlignOffsetToBlocks(m_IMGHandle.size()) * IMG_BLOCK_SIZE);
-#endif
+
 		quint32 index = GetIMGDirectoryEntryIndexByName(tempEntry.m_Name);
 
 		if (index == m_IMGDirectory.size())
@@ -395,7 +393,7 @@ quint32 IMGClass::GetIMGDirectoryEntryIndexByName(const char *name)
 	quint32 hash = CKeyGen::GetKeyOfUpCasedString(name);
 
 	return std::find_if(m_IMGDirectory.begin(), m_IMGDirectory.end(),
-		[hash](const IMGDirectoryEntryWrap &entrywrap){return entrywrap.m_NameHash == hash; }) - m_IMGDirectory.begin();
+		[hash, name](const IMGDirectoryEntryWrap &entrywrap){return entrywrap.m_NameHash == hash && _stricmp(entrywrap.m_RawData.m_Name, name) == 0; }) - m_IMGDirectory.begin();
 }
 
 void IMGClass::WriteIMGDirectoryEntry(const IMGDirectoryEntry &item, quint32 index)

@@ -21,8 +21,8 @@ public:
 
 	struct IMGDirectoryEntryWrap
 	{
-		IMGDirectoryEntry m_RawData;
 		quint32 m_NameHash;
+		IMGDirectoryEntry m_RawData;
 
 		IMGDirectoryEntryWrap(const IMGDirectoryEntry &raw);
 	};

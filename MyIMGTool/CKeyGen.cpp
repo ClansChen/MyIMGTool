@@ -1,6 +1,5 @@
 ﻿#include "CKeyGen.h"
 #include <cctype>
-#include <map>
 
 const quint32 CKeyGen::keyTable[256] =
 {
