@@ -17,8 +17,13 @@ MYIMGTOOL::MYIMGTOOL(QWidget *parent)
 	ui.setupUi(this);
 
 	setWindowIcon(QIcon(":/MyIMGTool/Resources/myimgtool.png"));
+	ui.action_new_ver1->setIcon(QIcon(":/MyIMGTool/Resources/vc.png"));
+	ui.action_new_ver2->setIcon(QIcon(":/MyIMGTool/Resources/sa.png"));
 
-	m_pTableModel = new IMGTableModel(this);
+	auto p = std::make_shared<std::vector<IMGClass::IMGDirectoryEntryWrap> >();
+
+	m_pIMGClass = new IMGClass(p, this);
+	m_pTableModel = new IMGTableModel(p, this);
 
 	m_pProxyModel = new QSortFilterProxyModel(this);
 	m_pProxyModel->setFilterKeyColumn(0);
@@ -27,14 +32,9 @@ MYIMGTOOL::MYIMGTOOL(QWidget *parent)
 	ui.tableView->setModel(m_pProxyModel);
 	ui.tableView->addActions({ ui.action_export, ui.action_delete });
 
-	ui.action_new_ver1->setIcon(QIcon(":/MyIMGTool/Resources/vc.png"));
-	ui.action_new_ver2->setIcon(QIcon(":/MyIMGTool/Resources/sa.png"));
-
 	m_pProgressDialog = new MyProgressDialog("", QString(), 0, 1, this, Qt::Window | Qt::WindowTitleHint | Qt::CustomizeWindowHint);
 	setWindowModality(Qt::WindowModal);
 	m_pProgressDialog->close();
-
-	m_pIMGClass = new IMGClass(this);
 
 	connect(ui.action_new_ver1, &QAction::triggered, this, &MYIMGTOOL::CreateVersion1IMG);
 	connect(ui.action_new_ver2, &QAction::triggered, this, &MYIMGTOOL::CreateVersion2IMG);
@@ -227,6 +227,12 @@ void MYIMGTOOL::ShowAboutQt()
 	QMessageBox::aboutQt(this, "关于Qt");
 }
 
+void MYIMGTOOL::RefreshTableView()
+{
+	dynamic_cast<IMGTableModel *>(m_pProxyModel->sourceModel())->RefreshView();
+	ui.tableView->repaint();
+}
+
 void MYIMGTOOL::FilterTable(const QString &keyword)
 {
 	ui.tableView->clearSelection();
@@ -262,12 +268,6 @@ void MYIMGTOOL::MapIndexesToSource(QModelIndexList &indexes)
 {
 	for (auto &index:indexes)
 		index = m_pProxyModel->mapToSource(index);
-}
-
-void MYIMGTOOL::RefreshTableView(const std::vector<IMGClass::IMGDirectoryEntryWrap> &newData)
-{
-	dynamic_cast<IMGTableModel *>(m_pProxyModel->sourceModel())->SetSourceData(newData);
-	ui.tableView->repaint();
 }
 
 QStringList MYIMGTOOL::GetFilePathListOfFolder(const QDir &dir)

@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <QFile>
 #include <vector>
+#include <memory>
 #include <QModelIndexList>
 #include <initializer_list>
 
@@ -40,7 +41,9 @@ public:
 	static const qint64 DIRECTORY_ENTRY_SIZE = 32;
 	static const quint32 INVALID_OFFSET = 0xFFFFFFFF;
 
-	IMGClass(QObject *parent = nullptr);
+	IMGClass(std::shared_ptr<std::vector<IMGClass::IMGDirectoryEntryWrap> > source, QObject *parent = nullptr);
+	IMGClass(const IMGClass &) = delete;
+	IMGClass &operator=(const IMGClass &) = delete;
 
 	bool CreateIMG(const QString &imgpath, IMGVersion version);
 	bool OpenIMG(const QString &imgpath);
@@ -51,14 +54,14 @@ public:
 	void RebuildIMG();
 
 	IMGVersion	GetIMGVersion(){ return m_IMGVersion; }
-	quint32		GetFilesCount(){ return m_IMGDirectory.size(); }
+	quint32		GetFilesCount(){ return m_pIMGDirectory->size(); }
 	QString		GetIMGFullPath(){ return m_IMGHandle.fileName(); }
 
 private:
 	QFile m_IMGHandle;
 	QFile m_DIRHandle;
 
-	std::vector<IMGDirectoryEntryWrap> m_IMGDirectory;
+	std::shared_ptr<std::vector<IMGDirectoryEntryWrap> > m_pIMGDirectory;
 
 	IMGVersion m_IMGVersion = UNDEFINED;
 
@@ -79,6 +82,6 @@ signals:
 	void ImportingFileFullPath(const QString &path);
 	void ExportingFileName(const QString &name);
 	void RebuildingFileName(const QString &name);
-	void IMGDirectoryChanged(const std::vector<IMGDirectoryEntryWrap> &newData);
+	void IMGDirectoryChanged();
 	void ErrorOccoured(std::initializer_list<QString> args);
 };

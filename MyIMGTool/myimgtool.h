@@ -1,8 +1,8 @@
 ﻿#pragma once
 #include <QtWidgets/QMainWindow>
 #include "ui_myimgtool.h"
-#include "IMGClass.h"
 
+class IMGClass;
 class IMGTableModel;
 class QDir;
 class QString;
@@ -15,7 +15,7 @@ class MYIMGTOOL : public QMainWindow
 	Q_OBJECT
 
 public:
-	MYIMGTOOL(QWidget * = nullptr);
+	MYIMGTOOL(QWidget *parent = nullptr);
 
     void CreateVersion1IMG();
     void CreateVersion2IMG();
@@ -32,8 +32,8 @@ public:
 
 	void ShowAboutQt();
 
+	void RefreshTableView();
 	void FilterTable(const QString &);
-	void RefreshTableView(const std::vector<IMGClass::IMGDirectoryEntryWrap> &newData);
 	void SetWindowIconByIMGVersion();
 	void IncProgressBar();
 

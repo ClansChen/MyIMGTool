@@ -2,14 +2,14 @@
 
 #include "IMGTableModel.h"
 
-IMGTableModel::IMGTableModel(QObject *parent)
-	:QAbstractTableModel(parent)
+IMGTableModel::IMGTableModel(std::shared_ptr<const std::vector<IMGClass::IMGDirectoryEntryWrap> > source, QObject *parent)
+	:QAbstractTableModel(parent), m_pIMGDirectory(source)
 {
 }
 
 int IMGTableModel::rowCount(const QModelIndex &parent) const
 {
-	return m_IMGDirectory.size();
+	return m_pIMGDirectory->size();
 }
 
 int IMGTableModel::columnCount(const QModelIndex &parent) const
@@ -46,13 +46,13 @@ QVariant IMGTableModel::data(const QModelIndex &index, int role) const
 		switch (index.column())
 		{
 		case 0:
-			return m_IMGDirectory.at(index.row()).m_RawData.m_Name;
+			return m_pIMGDirectory->at(index.row()).m_RawData.m_Name;
 		case 1:
-			return m_IMGDirectory.at(index.row()).m_RawData.m_SizeLow16 * IMGClass::IMG_BLOCK_SIZE / 1024;
+			return m_pIMGDirectory->at(index.row()).m_RawData.m_SizeLow16 * IMGClass::IMG_BLOCK_SIZE / 1024;
 		case 2:
 			return index.row();
 		case 3:
-			return m_IMGDirectory.at(index.row()).m_RawData.m_Offset * IMGClass::IMG_BLOCK_SIZE;
+			return m_pIMGDirectory->at(index.row()).m_RawData.m_Offset * IMGClass::IMG_BLOCK_SIZE;
 
 		default:
 			break;
@@ -69,9 +69,8 @@ QVariant IMGTableModel::data(const QModelIndex &index, int role) const
 	return QVariant();
 }
 
-void IMGTableModel::SetSourceData(const std::vector<IMGClass::IMGDirectoryEntryWrap> &source)
+void IMGTableModel::RefreshView()
 {
 	beginResetModel();
-	m_IMGDirectory = source;
 	endResetModel();
 }
