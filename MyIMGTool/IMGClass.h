@@ -41,7 +41,7 @@ public:
 	static const qint64 DIRECTORY_ENTRY_SIZE = 32;
 	static const quint32 INVALID_OFFSET = 0xFFFFFFFF;
 
-	IMGClass(std::shared_ptr<std::vector<IMGClass::IMGDirectoryEntryWrap> > source, QObject *parent = nullptr);
+	IMGClass(std::shared_ptr<std::vector<IMGDirectoryEntryWrap> > source, QObject *parent = nullptr);
 	IMGClass(const IMGClass &) = delete;
 	IMGClass &operator=(const IMGClass &) = delete;
 

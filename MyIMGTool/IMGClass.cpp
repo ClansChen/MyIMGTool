@@ -14,7 +14,7 @@ IMGClass::IMGDirectoryEntryWrap::IMGDirectoryEntryWrap(const IMGClass::IMGDirect
 	m_RawData = raw;
 }
 
-IMGClass::IMGClass(std::shared_ptr<std::vector<IMGClass::IMGDirectoryEntryWrap> > source,QObject *parent)
+IMGClass::IMGClass(std::shared_ptr<std::vector<IMGClass::IMGDirectoryEntryWrap> > source, QObject *parent)
 	:QObject(parent), m_pIMGDirectory(source)
 {
 }
