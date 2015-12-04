@@ -81,7 +81,7 @@
       </Command>
     </CustomBuildStep>
     <PostBuildEvent>
-      <Command>pack.bat</Command>
+      <Command>"C:\Program Files\WinRAR\Rar.exe" f C:\Users\ClansChen\Desktop\MyIMGTool.rar "$(TargetPath)"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -167,9 +167,6 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="Readme.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="pack.bat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

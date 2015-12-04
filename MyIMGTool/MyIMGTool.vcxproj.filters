@@ -103,7 +103,4 @@
   <ItemGroup>
     <Text Include="Readme.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="pack.bat" />
-  </ItemGroup>
 </Project>
