@@ -5,6 +5,7 @@
 #include "IMGTableModel.h"
 #include <QSortFilterProxyModel>
 #include <QFileDialog>
+#include <Qlabel>
 #include <QMessageBox>
 #include "MyProgressDialog.h"
 #include <QMimeData>
@@ -36,26 +37,34 @@ MYIMGTOOL::MYIMGTOOL(QWidget *parent)
 	setWindowModality(Qt::WindowModal);
 	m_pProgressDialog->close();
 
-	connect(ui.action_new_ver1, &QAction::triggered, this, &MYIMGTOOL::CreateVersion1IMG);
+	m_pStatusBarTips = new QLabel(this);
+	m_pStatusBarTips->setFixedWidth(300);
+	m_pStatusBarTips->setAlignment(Qt::AlignRight);
+	statusBar()->addPermanentWidget(m_pStatusBarTips);
+
+	connect(ui.action_new_ver1, &QAction::triggered, this,&MYIMGTOOL::CreateVersion1IMG);
 	connect(ui.action_new_ver2, &QAction::triggered, this, &MYIMGTOOL::CreateVersion2IMG);
 	connect(ui.action_open, &QAction::triggered, this, &MYIMGTOOL::OpenIMGDialog);
 	connect(ui.action_close, &QAction::triggered, this, &MYIMGTOOL::CloseIMG);
-	connect(ui.action_exit, &QAction::triggered, &QApplication::quit);
-	connect(ui.action_import, &QAction::triggered,this, &MYIMGTOOL::ImportFilesDialog);
+	connect(ui.action_exit, &QAction::triggered, this, &QApplication::quit);
+	connect(ui.action_import, &QAction::triggered, this, &MYIMGTOOL::ImportFilesDialog);
 	connect(ui.action_import_folder, &QAction::triggered, this, &MYIMGTOOL::ImportFolderDialog);
 	connect(ui.action_export, &QAction::triggered, this, &MYIMGTOOL::ExportFilesDialog);
 	connect(ui.action_delete, &QAction::triggered, this, &MYIMGTOOL::RemoveFiles);
 	connect(ui.action_rebuild, &QAction::triggered, this, &MYIMGTOOL::RebuildIMG);
 	connect(ui.action_showqtinfo, &QAction::triggered, this, &MYIMGTOOL::ShowAboutQt);
 
-	connect(m_pIMGClass, &IMGClass::IncreaseProgressBar, this, &MYIMGTOOL::IncProgressBar);
 	connect(m_pIMGClass, &IMGClass::ImportingFileFullPath, m_pProgressDialog, &MyProgressDialog::setLabelText);
-	connect(m_pIMGClass, &IMGClass::ExportingFileName, m_pProgressDialog, &MyProgressDialog::setLabelText);
-	connect(m_pIMGClass, &IMGClass::RebuildingFileName, m_pProgressDialog, &MyProgressDialog::setLabelText);
+	connect(m_pIMGClass, &IMGClass::ExportingFileName, m_pProgressDialog,  &MyProgressDialog::setLabelText);
+	connect(m_pIMGClass, &IMGClass::RebuildingFileName, m_pProgressDialog,  &MyProgressDialog::setLabelText);
+
 	connect(m_pIMGClass, &IMGClass::IMGDirectoryChanged, this, &MYIMGTOOL::RefreshTableView);
 	connect(m_pIMGClass, &IMGClass::ErrorOccoured, this, &MYIMGTOOL::RaiseErrorMessage);
-
+	connect(m_pIMGClass, &IMGClass::IncreaseProgressBar, this, &MYIMGTOOL::IncProgressBar);
 	connect(ui.lineEdit, &QLineEdit::textChanged, this, &MYIMGTOOL::FilterTable);
+
+	connect(ui.tableView->selectionModel(), &QItemSelectionModel::selectionChanged, this, &MYIMGTOOL::UpdateStatusBarTips);
+	connect(ui.lineEdit, &QLineEdit::textChanged, this, &MYIMGTOOL::UpdateStatusBarTips);
 }
 
 void MYIMGTOOL::SetWindowIconByIMGVersion()
@@ -107,6 +116,7 @@ void MYIMGTOOL::OpenIMG(const QString &imgpath)
 		SetIMGActionsEnable(true);
 		setWindowTitle(QString("MYIMGTOOL (%1)").arg(imgpath));
 		SetWindowIconByIMGVersion();
+		UpdateStatusBarTips();
 	}
 }
 
@@ -125,6 +135,7 @@ void MYIMGTOOL::CloseIMG()
 	SetIMGActionsEnable(false);
 	SetWindowIconByIMGVersion();
 	setWindowTitle("MYIMGTOOL");
+	UpdateStatusBarTips();
 }
 
 void MYIMGTOOL::ImportFiles(const QStringList &paths)
@@ -318,4 +329,20 @@ void MYIMGTOOL::dropEvent(QDropEvent *event)
 void MYIMGTOOL::IncProgressBar()
 {
 	m_pProgressDialog->setValue(m_pProgressDialog->value() + 1);
+}
+
+void MYIMGTOOL::UpdateStatusBarTips()
+{
+	if (m_pIMGClass->GetIMGVersion() == IMGClass::UNDEFINED || m_pProxyModel->rowCount() == 0)
+	{
+		m_pStatusBarTips->clear();
+		return;
+	}
+
+	int selected_count = ui.tableView->selectionModel()->selectedRows().size();
+
+	if (selected_count == 0)
+		m_pStatusBarTips->setText(QString("共%1个项目").arg(QString::number(m_pProxyModel->rowCount())));
+	else
+		m_pStatusBarTips->setText(QString("已选择%1个项目，共%2个").arg(QString::number(selected_count), QString::number(m_pProxyModel->rowCount())));
 }

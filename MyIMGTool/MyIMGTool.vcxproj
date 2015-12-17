@@ -81,7 +81,8 @@
       </Command>
     </CustomBuildStep>
     <PostBuildEvent>
-      <Command>"C:\Program Files\WinRAR\Rar.exe" f C:\Users\ClansChen\Desktop\MyIMGTool.rar "$(TargetPath)"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -109,6 +110,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="myimgtool.cpp" />
     <ClCompile Include="MyProgressDialog.cpp" />
+    <ClCompile Include="MyTableView.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="myimgtool.h">
@@ -138,6 +140,7 @@
     <ClInclude Include="CKeyGen.h" />
     <ClInclude Include="GeneratedFiles\ui_myimgtool.h" />
     <ClInclude Include="MyProgressDialog.h" />
+    <ClInclude Include="MyTableView.h" />
     <CustomBuild Include="IMGClass.h">
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(QTDIR)\bin\moc.exe;%(FullPath)</AdditionalInputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Moc%27ing IMGClass.h...</Message>

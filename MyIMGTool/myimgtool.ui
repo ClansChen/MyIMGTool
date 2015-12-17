@@ -169,6 +169,7 @@ selection-background-color: rgb(0, 170, 255);</string>
     <addaction name="menuNew"/>
     <addaction name="action_open"/>
     <addaction name="action_close"/>
+    <addaction name="action_recentlist"/>
     <addaction name="action_exit"/>
    </widget>
    <widget class="QMenu" name="menu_operations">
@@ -349,6 +350,20 @@ selection-background-color: rgb(0, 170, 255);</string>
    </property>
    <property name="toolTip">
     <string>关于本程序</string>
+   </property>
+  </action>
+  <action name="action_recentlist">
+   <property name="text">
+    <string>最近的文件(&amp;R)</string>
+   </property>
+   <property name="iconText">
+    <string>最近打开的文件列表</string>
+   </property>
+   <property name="toolTip">
+    <string>最近的文件(R)</string>
+   </property>
+   <property name="statusTip">
+    <string>最近打开的文件列表</string>
    </property>
   </action>
  </widget>

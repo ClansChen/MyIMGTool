@@ -9,6 +9,7 @@ class QString;
 class QStringList;
 class QSortFilterProxyModel;
 class QProgressDialog;
+class QLable;
 
 class MYIMGTOOL : public QMainWindow
 {
@@ -37,6 +38,8 @@ public:
 	void SetWindowIconByIMGVersion();
 	void IncProgressBar();
 
+	void UpdateStatusBarTips();
+
 protected:
 	void dragEnterEvent(QDragEnterEvent *);
 	void dropEvent(QDropEvent *);
@@ -51,6 +54,8 @@ private:
 	QProgressDialog *m_pProgressDialog;
 
 	IMGClass *m_pIMGClass;
+
+	QLabel *m_pStatusBarTips;
 
 	void SetIMGActionsEnable(bool);
 	void MapIndexesToSource(QModelIndexList &);
