@@ -2,7 +2,7 @@
 
 #include "IMGTableModel.h"
 
-IMGTableModel::IMGTableModel(std::shared_ptr<const std::vector<IMGClass::IMGDirectoryEntryWrap> > source, QObject *parent)
+IMGTableModel::IMGTableModel(std::shared_ptr<std::vector<IMGClass::IMGDirectoryEntryWrap> > source, QObject *parent)
 	:QAbstractTableModel(parent), m_pIMGDirectory(source)
 {
 }

@@ -5,7 +5,7 @@
 #include "IMGTableModel.h"
 #include <QSortFilterProxyModel>
 #include <QFileDialog>
-#include <Qlabel>
+#include <QLabel>
 #include <QMessageBox>
 #include "MyProgressDialog.h"
 #include <QMimeData>
@@ -248,7 +248,7 @@ void MYIMGTOOL::FilterTable(const QString &keyword)
 {
 	ui.tableView->clearSelection();
 
-	m_pProxyModel->setFilterRegExp(QRegExp(keyword));
+	m_pProxyModel->setFilterRegExp(QRegExp(keyword, Qt::CaseInsensitive));
 }
 
 void MYIMGTOOL::SetIMGActionsEnable(bool enable)
