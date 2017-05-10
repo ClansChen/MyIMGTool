@@ -1,6 +1,4 @@
-﻿#pragma execution_character_set("utf-8")
-
-#include "myimgtool.h"
+﻿#include "myimgtool.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])

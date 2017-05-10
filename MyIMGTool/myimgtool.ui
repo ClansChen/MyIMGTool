@@ -169,7 +169,6 @@ selection-background-color: rgb(0, 170, 255);</string>
     <addaction name="menuNew"/>
     <addaction name="action_open"/>
     <addaction name="action_close"/>
-    <addaction name="action_recentlist"/>
     <addaction name="action_exit"/>
    </widget>
    <widget class="QMenu" name="menu_operations">
@@ -316,7 +315,7 @@ selection-background-color: rgb(0, 170, 255);</string>
   </action>
   <action name="action_new_ver1">
    <property name="text">
-    <string>版本1...(&amp;1)</string>
+    <string>罪恶都市IMG...(&amp;1)</string>
    </property>
    <property name="toolTip">
     <string>新建版本1档案</string>
@@ -324,7 +323,7 @@ selection-background-color: rgb(0, 170, 255);</string>
   </action>
   <action name="action_new_ver2">
    <property name="text">
-    <string>版本2...(&amp;2)</string>
+    <string>圣安地列斯IMG...(&amp;2)</string>
    </property>
    <property name="toolTip">
     <string>新建版本2档案</string>

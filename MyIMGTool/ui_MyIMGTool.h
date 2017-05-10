@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MyIMGTool.ui'
 **
-** Created by: Qt User Interface Compiler version 5.7.0
+** Created by: Qt User Interface Compiler version 5.8.0
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -189,7 +189,6 @@ public:
         menu_file->addAction(menuNew->menuAction());
         menu_file->addAction(action_open);
         menu_file->addAction(action_close);
-        menu_file->addAction(action_recentlist);
         menu_file->addAction(action_exit);
         menuNew->addAction(action_new_ver1);
         menuNew->addAction(action_new_ver2);
@@ -207,96 +206,96 @@ public:
 
     void retranslateUi(QMainWindow *MYIMGTOOLClass)
     {
-        MYIMGTOOLClass->setWindowTitle(QApplication::translate("MYIMGTOOLClass", "MYIMGTOOL", 0));
-        action_open->setText(QApplication::translate("MYIMGTOOLClass", "\346\211\223\345\274\200IMG...(&O)", 0));
+        MYIMGTOOLClass->setWindowTitle(QApplication::translate("MYIMGTOOLClass", "MYIMGTOOL", Q_NULLPTR));
+        action_open->setText(QApplication::translate("MYIMGTOOLClass", "\346\211\223\345\274\200IMG...(&O)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_open->setToolTip(QApplication::translate("MYIMGTOOLClass", "\346\211\223\345\274\200IMG\346\226\207\344\273\266", 0));
+        action_open->setToolTip(QApplication::translate("MYIMGTOOLClass", "\346\211\223\345\274\200IMG\346\226\207\344\273\266", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_STATUSTIP
-        action_open->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\346\211\223\345\274\200\344\270\200\344\270\252IMG\346\226\207\344\273\266", 0));
+        action_open->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\346\211\223\345\274\200\344\270\200\344\270\252IMG\346\226\207\344\273\266", Q_NULLPTR));
 #endif // QT_NO_STATUSTIP
-        action_open->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+O", 0));
-        action_close->setText(QApplication::translate("MYIMGTOOLClass", "\345\205\263\351\227\255IMG(&C)", 0));
+        action_open->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+O", Q_NULLPTR));
+        action_close->setText(QApplication::translate("MYIMGTOOLClass", "\345\205\263\351\227\255IMG(&C)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_close->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\205\263\351\227\255\345\275\223\345\211\215\346\211\223\345\274\200\347\232\204IMG", 0));
+        action_close->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\205\263\351\227\255\345\275\223\345\211\215\346\211\223\345\274\200\347\232\204IMG", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_STATUSTIP
-        action_close->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\345\205\263\351\227\255\345\275\223\345\211\215\346\211\223\345\274\200\347\232\204\346\226\207\344\273\266", 0));
+        action_close->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\345\205\263\351\227\255\345\275\223\345\211\215\346\211\223\345\274\200\347\232\204\346\226\207\344\273\266", Q_NULLPTR));
 #endif // QT_NO_STATUSTIP
-        action_exit->setText(QApplication::translate("MYIMGTOOLClass", "\351\200\200\345\207\272\347\250\213\345\272\217(&Q)", 0));
+        action_exit->setText(QApplication::translate("MYIMGTOOLClass", "\351\200\200\345\207\272\347\250\213\345\272\217(&Q)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_exit->setToolTip(QApplication::translate("MYIMGTOOLClass", "\351\200\200\345\207\272\347\250\213\345\272\217", 0));
+        action_exit->setToolTip(QApplication::translate("MYIMGTOOLClass", "\351\200\200\345\207\272\347\250\213\345\272\217", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_STATUSTIP
-        action_exit->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\351\200\200\345\207\272\347\250\213\345\272\217", 0));
+        action_exit->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\351\200\200\345\207\272\347\250\213\345\272\217", Q_NULLPTR));
 #endif // QT_NO_STATUSTIP
-        action_exit->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+Q", 0));
-        action_import->setText(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\346\226\207\344\273\266...(&I)", 0));
+        action_exit->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+Q", Q_NULLPTR));
+        action_import->setText(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\346\226\207\344\273\266...(&I)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_import->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\346\226\207\344\273\266", 0));
+        action_import->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\346\226\207\344\273\266", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_STATUSTIP
-        action_import->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\344\270\200\344\270\252\346\210\226\345\244\232\344\270\252\346\226\207\344\273\266", 0));
+        action_import->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\344\270\200\344\270\252\346\210\226\345\244\232\344\270\252\346\226\207\344\273\266", Q_NULLPTR));
 #endif // QT_NO_STATUSTIP
-        action_import->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+I", 0));
-        action_rebuild->setText(QApplication::translate("MYIMGTOOLClass", "\351\207\215\345\273\272IMG(&R)", 0));
+        action_import->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+I", Q_NULLPTR));
+        action_rebuild->setText(QApplication::translate("MYIMGTOOLClass", "\351\207\215\345\273\272IMG(&R)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_rebuild->setToolTip(QApplication::translate("MYIMGTOOLClass", "\351\207\215\345\273\272IMG", 0));
+        action_rebuild->setToolTip(QApplication::translate("MYIMGTOOLClass", "\351\207\215\345\273\272IMG", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_STATUSTIP
-        action_rebuild->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\351\207\215\345\273\272IMG\344\273\245\345\216\273\351\231\244\346\227\240\347\224\250\347\251\272\351\227\264(\351\234\200\350\246\201\344\270\200\346\256\265\346\227\266\351\227\264)", 0));
+        action_rebuild->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\351\207\215\345\273\272IMG\344\273\245\345\216\273\351\231\244\346\227\240\347\224\250\347\251\272\351\227\264(\351\234\200\350\246\201\344\270\200\346\256\265\346\227\266\351\227\264)", Q_NULLPTR));
 #endif // QT_NO_STATUSTIP
-        action_rebuild->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+R", 0));
-        action_import_folder->setText(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\346\226\207\344\273\266\345\244\271...(&F)", 0));
+        action_rebuild->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+R", Q_NULLPTR));
+        action_import_folder->setText(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\346\226\207\344\273\266\345\244\271...(&F)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_import_folder->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\346\226\207\344\273\266\345\244\271", 0));
+        action_import_folder->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\346\226\207\344\273\266\345\244\271", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_STATUSTIP
-        action_import_folder->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\346\226\207\344\273\266\345\244\271\345\206\205\347\232\204\346\211\200\346\234\211\346\226\207\344\273\266", 0));
+        action_import_folder->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\205\245\346\226\207\344\273\266\345\244\271\345\206\205\347\232\204\346\211\200\346\234\211\346\226\207\344\273\266", Q_NULLPTR));
 #endif // QT_NO_STATUSTIP
-        action_import_folder->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+F", 0));
-        action_showqtinfo->setText(QApplication::translate("MYIMGTOOLClass", "\345\205\263\344\272\216Qt...(&Q)", 0));
+        action_import_folder->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+F", Q_NULLPTR));
+        action_showqtinfo->setText(QApplication::translate("MYIMGTOOLClass", "\345\205\263\344\272\216Qt...(&Q)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_showqtinfo->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\205\263\344\272\216Qt", 0));
+        action_showqtinfo->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\205\263\344\272\216Qt", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_STATUSTIP
-        action_showqtinfo->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\346\230\276\347\244\272\346\234\254\345\267\245\345\205\267\347\232\204\344\277\241\346\201\257", 0));
+        action_showqtinfo->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\346\230\276\347\244\272\346\234\254\345\267\245\345\205\267\347\232\204\344\277\241\346\201\257", Q_NULLPTR));
 #endif // QT_NO_STATUSTIP
-        action_export->setText(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\207\272\346\211\200\351\200\211\346\226\207\344\273\266...(&E)", 0));
+        action_export->setText(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\207\272\346\211\200\351\200\211\346\226\207\344\273\266...(&E)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_export->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\207\272\346\211\200\351\200\211\346\226\207\344\273\266", 0));
+        action_export->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\257\274\345\207\272\346\211\200\351\200\211\346\226\207\344\273\266", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        action_export->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+E", 0));
-        action_new_ver1->setText(QApplication::translate("MYIMGTOOLClass", "\347\211\210\346\234\2541...(&1)", 0));
+        action_export->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+E", Q_NULLPTR));
+        action_new_ver1->setText(QApplication::translate("MYIMGTOOLClass", "\347\275\252\346\201\266\351\203\275\345\270\202IMG...(&1)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_new_ver1->setToolTip(QApplication::translate("MYIMGTOOLClass", "\346\226\260\345\273\272\347\211\210\346\234\2541\346\241\243\346\241\210", 0));
+        action_new_ver1->setToolTip(QApplication::translate("MYIMGTOOLClass", "\346\226\260\345\273\272\347\211\210\346\234\2541\346\241\243\346\241\210", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        action_new_ver2->setText(QApplication::translate("MYIMGTOOLClass", "\347\211\210\346\234\2542...(&2)", 0));
+        action_new_ver2->setText(QApplication::translate("MYIMGTOOLClass", "\345\234\243\345\256\211\345\234\260\345\210\227\346\226\257IMG...(&2)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_new_ver2->setToolTip(QApplication::translate("MYIMGTOOLClass", "\346\226\260\345\273\272\347\211\210\346\234\2542\346\241\243\346\241\210", 0));
+        action_new_ver2->setToolTip(QApplication::translate("MYIMGTOOLClass", "\346\226\260\345\273\272\347\211\210\346\234\2542\346\241\243\346\241\210", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        action_delete->setText(QApplication::translate("MYIMGTOOLClass", "\345\210\240\351\231\244\351\200\211\344\270\255\347\232\204\346\226\207\344\273\266(&D)", 0));
+        action_delete->setText(QApplication::translate("MYIMGTOOLClass", "\345\210\240\351\231\244\351\200\211\344\270\255\347\232\204\346\226\207\344\273\266(&D)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_delete->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\210\240\351\231\244\351\200\211\344\270\255\347\232\204\346\226\207\344\273\266", 0));
+        action_delete->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\210\240\351\231\244\351\200\211\344\270\255\347\232\204\346\226\207\344\273\266", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        action_delete->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+D", 0));
-        action_showinfo->setText(QApplication::translate("MYIMGTOOLClass", "\345\205\263\344\272\216\346\234\254\347\250\213\345\272\217...(&A)", 0));
+        action_delete->setShortcut(QApplication::translate("MYIMGTOOLClass", "Ctrl+D", Q_NULLPTR));
+        action_showinfo->setText(QApplication::translate("MYIMGTOOLClass", "\345\205\263\344\272\216\346\234\254\347\250\213\345\272\217...(&A)", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_showinfo->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\205\263\344\272\216\346\234\254\347\250\213\345\272\217", 0));
+        action_showinfo->setToolTip(QApplication::translate("MYIMGTOOLClass", "\345\205\263\344\272\216\346\234\254\347\250\213\345\272\217", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
-        action_recentlist->setText(QApplication::translate("MYIMGTOOLClass", "\346\234\200\350\277\221\347\232\204\346\226\207\344\273\266(&R)", 0));
-        action_recentlist->setIconText(QApplication::translate("MYIMGTOOLClass", "\346\234\200\350\277\221\346\211\223\345\274\200\347\232\204\346\226\207\344\273\266\345\210\227\350\241\250", 0));
+        action_recentlist->setText(QApplication::translate("MYIMGTOOLClass", "\346\234\200\350\277\221\347\232\204\346\226\207\344\273\266(&R)", Q_NULLPTR));
+        action_recentlist->setIconText(QApplication::translate("MYIMGTOOLClass", "\346\234\200\350\277\221\346\211\223\345\274\200\347\232\204\346\226\207\344\273\266\345\210\227\350\241\250", Q_NULLPTR));
 #ifndef QT_NO_TOOLTIP
-        action_recentlist->setToolTip(QApplication::translate("MYIMGTOOLClass", "\346\234\200\350\277\221\347\232\204\346\226\207\344\273\266(R)", 0));
+        action_recentlist->setToolTip(QApplication::translate("MYIMGTOOLClass", "\346\234\200\350\277\221\347\232\204\346\226\207\344\273\266(R)", Q_NULLPTR));
 #endif // QT_NO_TOOLTIP
 #ifndef QT_NO_STATUSTIP
-        action_recentlist->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\346\234\200\350\277\221\346\211\223\345\274\200\347\232\204\346\226\207\344\273\266\345\210\227\350\241\250", 0));
+        action_recentlist->setStatusTip(QApplication::translate("MYIMGTOOLClass", "\346\234\200\350\277\221\346\211\223\345\274\200\347\232\204\346\226\207\344\273\266\345\210\227\350\241\250", Q_NULLPTR));
 #endif // QT_NO_STATUSTIP
-        label->setText(QApplication::translate("MYIMGTOOLClass", "\346\220\234\347\264\242\345\205\263\351\224\256\345\255\227", 0));
-        menu_file->setTitle(QApplication::translate("MYIMGTOOLClass", "\346\226\207\344\273\266(&F)", 0));
-        menuNew->setTitle(QApplication::translate("MYIMGTOOLClass", "\346\226\260\345\273\272(&N)", 0));
-        menu_operations->setTitle(QApplication::translate("MYIMGTOOLClass", "\346\223\215\344\275\234(&A)", 0));
-        menu_misc->setTitle(QApplication::translate("MYIMGTOOLClass", "\346\235\202\351\241\271(&M)", 0));
+        label->setText(QApplication::translate("MYIMGTOOLClass", "\346\220\234\347\264\242\345\205\263\351\224\256\345\255\227", Q_NULLPTR));
+        menu_file->setTitle(QApplication::translate("MYIMGTOOLClass", "\346\226\207\344\273\266(&F)", Q_NULLPTR));
+        menuNew->setTitle(QApplication::translate("MYIMGTOOLClass", "\346\226\260\345\273\272(&N)", Q_NULLPTR));
+        menu_operations->setTitle(QApplication::translate("MYIMGTOOLClass", "\346\223\215\344\275\234(&A)", Q_NULLPTR));
+        menu_misc->setTitle(QApplication::translate("MYIMGTOOLClass", "\346\235\202\351\241\271(&M)", Q_NULLPTR));
     } // retranslateUi
 
 };

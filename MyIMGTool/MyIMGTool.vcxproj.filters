@@ -67,21 +67,30 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CKeyGen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <CustomBuild Include="IMGClass.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <ClInclude Include="IMGTableModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <CustomBuild Include="MyIMGTool.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <ClInclude Include="MyProgressDialog.h">
+    <CustomBuild Include="CKeyGen.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
+    </CustomBuild>
+    <CustomBuild Include="IMGTableModel.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="MyProgressDialog.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Resources\myimgtool.png">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Resources\sa.png">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="Resources\vc.png">
+      <Filter>Resource Files</Filter>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="debug\moc_IMGClass.cpp">
@@ -102,28 +111,19 @@
     <ClCompile Include="release\qrc_MyIMGTool.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClInclude Include="ui_MyIMGTool.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MyIMGTool.ui">
       <Filter>Form Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="ui_MyIMGTool.h">
+      <Filter>Generated Files</Filter>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="MyIMGTool.qrc">
       <Filter>Resource Files</Filter>
     </CustomBuild>
-    <None Include="Resources\myimgtool.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\sa.png">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="Resources\vc.png">
-      <Filter>Resource Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MyIMGTool.rc" />

@@ -8,14 +8,8 @@
 #include <cstring>
 #include <algorithm>
 
-IMGClass::IMGDirectoryEntryWrap::IMGDirectoryEntryWrap(const IMGClass::IMGDirectoryEntry &raw)
-{
-	m_NameHash = CKeyGen::GetKeyOfUpCasedString(raw.m_Name);
-	m_RawData = raw;
-}
-
-IMGClass::IMGClass(std::shared_ptr<std::vector<IMGClass::IMGDirectoryEntryWrap> > source, QObject *parent)
-	:QObject(parent), m_pIMGDirectory(source)
+IMGClass::IMGClass(QObject *parent)
+	:QObject(parent)
 {
 }
 
@@ -33,7 +27,7 @@ bool IMGClass::CreateIMG(const QString &imgpath, IMGVersion version)
 		return false;
 	}
 
-	if (version == VERSION1)
+	if (version == IMGVersion::VERSION1)
 	{
 		if (!newDir.open(QIODevice::ReadWrite | QIODevice::Truncate))
 		{
@@ -42,7 +36,7 @@ bool IMGClass::CreateIMG(const QString &imgpath, IMGVersion version)
 			return false;
 		}
 	}
-	else if (version == VERSION2)
+	else if (version == IMGVersion::VERSION2)
 	{
 		newIMG.write("VER2", 4);
 		newIMG.write("\x00\x00\x00\x00", 4);
@@ -71,19 +65,19 @@ bool IMGClass::OpenIMG(const QString &imgpath)
 	{
 		m_IMGHandle.read(reinterpret_cast<char *>(&n_files), 4);
 
-		m_pIMGDirectory->reserve(n_files * 2);
+		m_IMGDirectory.reserve(n_files * 2);
 
 		while (n_files != 0)
 		{
 			m_IMGHandle.read(reinterpret_cast<char *>(&tempItem), DIRECTORY_ENTRY_SIZE);
 
-			m_pIMGDirectory->push_back(IMGDirectoryEntryWrap(tempItem));
+			m_IMGDirectory.push_back(tempItem);
 			--n_files;
 		}
 
 		GetVersion2IMGDirectoryFreeSlotsCount();
 
-		m_IMGVersion = VERSION2;
+		m_IMGVersion = IMGVersion::VERSION2;
 	}
 	else
 	{
@@ -98,7 +92,7 @@ bool IMGClass::OpenIMG(const QString &imgpath)
 			return false;
 		}
 
-		if ((m_DIRHandle.size() % 32) != 0)
+		if ((m_DIRHandle.size() % sizeof(IMGDirectoryEntry)) != 0)
 		{
 			emit ErrorOccoured({ "IMG目录 ", dirpath, " 大小不合法" });
 			m_IMGHandle.close();
@@ -108,17 +102,17 @@ bool IMGClass::OpenIMG(const QString &imgpath)
 
 		n_files = m_DIRHandle.size() / DIRECTORY_ENTRY_SIZE;
 
-		m_pIMGDirectory->reserve(n_files * 2);
+		m_IMGDirectory.reserve(n_files * 2);
 
 		while (n_files != 0)
 		{
 			m_DIRHandle.read(reinterpret_cast<char *>(&tempItem), DIRECTORY_ENTRY_SIZE);
 
-			m_pIMGDirectory->push_back(IMGDirectoryEntryWrap(tempItem));
+			m_IMGDirectory.push_back(tempItem);
 			--n_files;
 		}
 
-		m_IMGVersion = VERSION1;
+		m_IMGVersion = IMGVersion::VERSION1;
 	}
 
 	emit IMGDirectoryChanged();
@@ -131,9 +125,9 @@ void IMGClass::CloseIMG()
 	m_IMGHandle.close();
 	m_DIRHandle.close();
 
-	m_IMGVersion = UNDEFINED;
+	m_IMGVersion = IMGVersion::UNDEFINED;
 
-	m_pIMGDirectory->clear();
+	m_IMGDirectory.clear();
 	emit IMGDirectoryChanged();
 }
 
@@ -184,17 +178,17 @@ void IMGClass::ImportFiles(const QStringList &paths)
 
 		quint32 index = GetIMGDirectoryEntryIndexByName(tempEntry.m_Name);
 
-		if (index == m_pIMGDirectory->size())
+		if (index == m_IMGDirectory.size())
 		{
-			m_pIMGDirectory->push_back(IMGDirectoryEntryWrap(tempEntry));
+			m_IMGDirectory.push_back((tempEntry));
 
-			if (m_IMGVersion == VERSION2 && m_Version2IMGDirectoryFreeSlotsCount == 0)
+			if (m_IMGVersion == IMGVersion::VERSION2 && m_Version2IMGDirectoryFreeSlotsCount == 0)
 				MakeIMGDirectoryFreeSlots();
 
 			--m_Version2IMGDirectoryFreeSlotsCount;
 		}
 		else
-			m_pIMGDirectory->at(index) = IMGDirectoryEntryWrap(tempEntry);
+			m_IMGDirectory.at(index) = tempEntry;
 	}
 
 	WriteIMGDirectory();
@@ -215,8 +209,8 @@ void IMGClass::ExportFiles(const QString &dest, const QModelIndexList &indexes)
 
 	for (auto &index : indexes)
 	{
-		auto iterToExportingEntry = m_pIMGDirectory->begin() + index.row();
-		fileName = iterToExportingEntry->m_RawData.m_Name;
+		auto iterToExportingEntry = m_IMGDirectory.begin() + index.row();
+		fileName = iterToExportingEntry->m_Name;
 
 		emit ExportingFileName(fileName);
 		emit IncreaseProgressBar();
@@ -229,20 +223,20 @@ void IMGClass::ExportFiles(const QString &dest, const QModelIndexList &indexes)
 			return;
 		}
 
-		m_IMGHandle.seek(iterToExportingEntry->m_RawData.m_Offset * IMG_BLOCK_SIZE);
-		exportFile.write(m_IMGHandle.read(iterToExportingEntry->m_RawData.m_SizeLow16 * IMG_BLOCK_SIZE));
+		m_IMGHandle.seek(iterToExportingEntry->m_Offset * IMG_BLOCK_SIZE);
+		exportFile.write(m_IMGHandle.read(iterToExportingEntry->m_SizeLow16 * IMG_BLOCK_SIZE));
 	}
 }
 
 void IMGClass::RemoveFiles(const QModelIndexList &indexes)
 {
 	for (auto &index : indexes)
-		m_pIMGDirectory->at(index.row()).m_NameHash = 0;
+		m_IMGDirectory.at(index.row()).m_Name[0] = 0;
 
-	m_pIMGDirectory->erase(std::remove_if(m_pIMGDirectory->begin(), m_pIMGDirectory->end(),
-		[](IMGDirectoryEntryWrap &entry){return entry.m_NameHash == 0; }), m_pIMGDirectory->end());
+	m_IMGDirectory.erase(std::remove_if(m_IMGDirectory.begin(), m_IMGDirectory.end(),
+		[](IMGDirectoryEntry &entry) {return entry.m_Name[0] == 0; }), m_IMGDirectory.end());
 
-	if (m_IMGVersion == VERSION2)
+	if (m_IMGVersion == IMGVersion::VERSION2)
 		m_Version2IMGDirectoryFreeSlotsCount += indexes.size();
 
 	WriteIMGDirectory();
@@ -264,7 +258,7 @@ void IMGClass::RebuildIMG()
 		return;
 	}
 
-	if (m_IMGVersion == VERSION1)
+	if (m_IMGVersion == IMGVersion::VERSION1)
 		if (!rebuildingDIR.open(QIODevice::WriteOnly | QIODevice::Truncate))
 		{
 			emit ErrorOccoured({ "创建临时文件失败" });
@@ -272,30 +266,30 @@ void IMGClass::RebuildIMG()
 			return;
 		}
 
-	for (auto &entry : *m_pIMGDirectory)
+	for (auto &entry : m_IMGDirectory)
 	{
 		emit IncreaseProgressBar();
-		emit RebuildingFileName(entry.m_RawData.m_Name);
+		emit RebuildingFileName(entry.m_Name);
 		QApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
-		m_IMGHandle.seek(entry.m_RawData.m_Offset * IMG_BLOCK_SIZE);
+		m_IMGHandle.seek(entry.m_Offset * IMG_BLOCK_SIZE);
 
 		rebuildingIMG.seek(writingBlock * IMG_BLOCK_SIZE);
-		rebuildingIMG.write(m_IMGHandle.read(entry.m_RawData.m_SizeLow16 * IMG_BLOCK_SIZE));
+		rebuildingIMG.write(m_IMGHandle.read(entry.m_SizeLow16 * IMG_BLOCK_SIZE));
 
-		entry.m_RawData.m_Offset = writingBlock;
-		writingBlock += entry.m_RawData.m_SizeLow16;
+		entry.m_Offset = writingBlock;
+		writingBlock += entry.m_SizeLow16;
 	}
 
-	if (m_IMGVersion == VERSION1)
+	if (m_IMGVersion == IMGVersion::VERSION1)
 		WriteVersion1IMGDirectory(rebuildingDIR);
-	else if (m_IMGVersion == VERSION2)
+	else if (m_IMGVersion == IMGVersion::VERSION2)
 		WriteVersion2IMGDirectory(rebuildingIMG);
 
 	m_IMGHandle.remove();
 	rebuildingIMG.rename(m_IMGHandle.fileName());
 
-	if (m_IMGVersion == VERSION1)
+	if (m_IMGVersion == IMGVersion::VERSION1)
 	{
 		m_DIRHandle.remove();
 		rebuildingDIR.rename(m_DIRHandle.fileName());
@@ -305,10 +299,7 @@ void IMGClass::RebuildIMG()
 quint32 IMGClass::AlignOffsetToBlocks(qint64 offset)
 {
 	if (offset < MAX_IMG_SIZE)
-		if ((offset % IMG_BLOCK_SIZE) == 0)
-			return static_cast<quint32>(offset / IMG_BLOCK_SIZE);
-		else
-			return static_cast<quint32>(offset / IMG_BLOCK_SIZE + 1);
+		return (offset + IMG_BLOCK_SIZE - 1) & (~(IMG_BLOCK_SIZE - 1));
 	else
 		return INVALID_OFFSET;
 }
@@ -317,76 +308,76 @@ void IMGClass::WriteVersion1IMGDirectory(QFile &file)
 {
 	file.seek(0);
 
-	for (auto &entry : *m_pIMGDirectory)
-		file.write(reinterpret_cast<const char *>(&entry.m_RawData), DIRECTORY_ENTRY_SIZE);
+	for (auto &entry : m_IMGDirectory)
+		file.write(reinterpret_cast<const char *>(&entry), DIRECTORY_ENTRY_SIZE);
 
-	file.resize(m_pIMGDirectory->size() * DIRECTORY_ENTRY_SIZE);
+	file.resize(m_IMGDirectory.size() * DIRECTORY_ENTRY_SIZE);
 }
 
 void IMGClass::WriteVersion2IMGDirectory(QFile &file)
 {
-	quint32 count = m_pIMGDirectory->size();
+	quint32 count = m_IMGDirectory.size();
 	file.seek(0);
 	file.write("VER2", 4);
 	file.write(reinterpret_cast<const char *>(&count), 4);
 
-	for (auto &entry : *m_pIMGDirectory)
-		file.write(reinterpret_cast<const char *>(&entry.m_RawData), DIRECTORY_ENTRY_SIZE);
+	for (auto &entry : m_IMGDirectory)
+		file.write(reinterpret_cast<const char *>(&entry), DIRECTORY_ENTRY_SIZE);
 }
 
 void IMGClass::WriteIMGDirectory()
 {
-	if (m_IMGVersion == VERSION1)
+	if (m_IMGVersion == IMGVersion::VERSION1)
 		WriteVersion1IMGDirectory(m_DIRHandle);
-	else if (m_IMGVersion == VERSION2)
+	else if (m_IMGVersion == IMGVersion::VERSION2)
 		WriteVersion2IMGDirectory(m_IMGHandle);
 }
 
 quint32 IMGClass::GetFirstWritingBlockForRebuilding()
 {
-	if (m_IMGVersion == VERSION1)
+	if (m_IMGVersion == IMGVersion::VERSION1)
 		return 0;
-	else if (m_IMGVersion == VERSION2)
-		return AlignOffsetToBlocks(8 + m_pIMGDirectory->size() * DIRECTORY_ENTRY_SIZE) + 1;
+	else if (m_IMGVersion == IMGVersion::VERSION2)
+		return AlignOffsetToBlocks(8 + m_IMGDirectory.size() * DIRECTORY_ENTRY_SIZE) + 1;
 	else
 		return INVALID_OFFSET;
 }
 
 void IMGClass::GetVersion2IMGDirectoryFreeSlotsCount()
 {
-	auto iterToMinFileOffset = std::min_element(m_pIMGDirectory->begin(), m_pIMGDirectory->end(),
-		[](const IMGDirectoryEntryWrap &lhs, const IMGDirectoryEntryWrap &rhs){return lhs.m_RawData.m_Offset < rhs.m_RawData.m_Offset; });
+	auto iterToMinFileOffset = std::min_element(m_IMGDirectory.begin(), m_IMGDirectory.end(),
+		[](const IMGDirectoryEntry &lhs, const IMGDirectoryEntry &rhs){return lhs.m_Offset < rhs.m_Offset; });
 
-	if (iterToMinFileOffset == m_pIMGDirectory->end())
+	if (iterToMinFileOffset == m_IMGDirectory.end())
 	{
 		m_IMGHandle.resize(IMG_BLOCK_SIZE);
 		m_Version2IMGDirectoryFreeSlotsCount = (IMG_BLOCK_SIZE - 8) / DIRECTORY_ENTRY_SIZE;
 		return;
 	}
 
-	m_Version2IMGDirectoryFreeSlotsCount = (iterToMinFileOffset->m_RawData.m_Offset * IMG_BLOCK_SIZE - 8 - m_pIMGDirectory->size() * DIRECTORY_ENTRY_SIZE) / DIRECTORY_ENTRY_SIZE;
+	m_Version2IMGDirectoryFreeSlotsCount = (iterToMinFileOffset->m_Offset * IMG_BLOCK_SIZE - 8 - m_IMGDirectory.size() * DIRECTORY_ENTRY_SIZE) / DIRECTORY_ENTRY_SIZE;
 }
 
 void IMGClass::MakeIMGDirectoryFreeSlots()
 {
 	QByteArray buffer;
 
-	auto iterToMinFileOffset = std::min_element(m_pIMGDirectory->begin(), m_pIMGDirectory->end(),
-		[](const IMGDirectoryEntryWrap &lhs, const IMGDirectoryEntryWrap &rhs){return lhs.m_RawData.m_Offset < rhs.m_RawData.m_Offset; });
+	auto iterToMinFileOffset = std::min_element(m_IMGDirectory.begin(), m_IMGDirectory.end(),
+		[](const IMGDirectoryEntry &lhs, const IMGDirectoryEntry &rhs){return lhs.m_Offset < rhs.m_Offset; });
 
-	if (iterToMinFileOffset == m_pIMGDirectory->end())
+	if (iterToMinFileOffset == m_IMGDirectory.end())
 		return;
 
-	m_IMGHandle.seek(iterToMinFileOffset->m_RawData.m_Offset * IMG_BLOCK_SIZE);
-	buffer = m_IMGHandle.read(iterToMinFileOffset->m_RawData.m_SizeLow16 * IMG_BLOCK_SIZE);
+	m_IMGHandle.seek(iterToMinFileOffset->m_Offset * IMG_BLOCK_SIZE);
+	buffer = m_IMGHandle.read(iterToMinFileOffset->m_SizeLow16 * IMG_BLOCK_SIZE);
 
-	iterToMinFileOffset->m_RawData.m_Offset = AlignOffsetToBlocks(m_IMGHandle.size());
-	m_IMGHandle.seek(iterToMinFileOffset->m_RawData.m_Offset*IMG_BLOCK_SIZE);
+	iterToMinFileOffset->m_Offset = AlignOffsetToBlocks(m_IMGHandle.size());
+	m_IMGHandle.seek(iterToMinFileOffset->m_Offset * IMG_BLOCK_SIZE);
 	m_IMGHandle.write(buffer);
 
-	WriteIMGDirectoryEntry(iterToMinFileOffset->m_RawData, iterToMinFileOffset - m_pIMGDirectory->begin());
+	WriteIMGDirectoryEntry(*iterToMinFileOffset, iterToMinFileOffset - m_IMGDirectory.begin());
 
-	m_Version2IMGDirectoryFreeSlotsCount += iterToMinFileOffset->m_RawData.m_SizeLow16 * IMG_BLOCK_SIZE / DIRECTORY_ENTRY_SIZE;
+	m_Version2IMGDirectoryFreeSlotsCount += iterToMinFileOffset->m_SizeLow16 * IMG_BLOCK_SIZE / DIRECTORY_ENTRY_SIZE;
 
 	emit IMGDirectoryChanged();
 }
@@ -395,18 +386,18 @@ quint32 IMGClass::GetIMGDirectoryEntryIndexByName(const char *name)
 {
 	quint32 hash = CKeyGen::GetKeyOfUpCasedString(name);
 
-	return std::find_if(m_pIMGDirectory->begin(), m_pIMGDirectory->end(),
-		[hash, name](const IMGDirectoryEntryWrap &entrywrap){return entrywrap.m_NameHash == hash && _stricmp(entrywrap.m_RawData.m_Name, name) == 0; }) - m_pIMGDirectory->begin();
+	return std::find_if(m_IMGDirectory.begin(), m_IMGDirectory.end(),
+		[hash, name](const IMGDirectoryEntry &entry) {return _stricmp(entry.m_Name, name) == 0; }) - m_IMGDirectory.begin();
 }
 
 void IMGClass::WriteIMGDirectoryEntry(const IMGDirectoryEntry &item, quint32 index)
 {
-	if (m_IMGVersion == VERSION1)
+	if (m_IMGVersion == IMGVersion::VERSION1)
 	{
 		m_DIRHandle.seek(index * DIRECTORY_ENTRY_SIZE);
 		m_DIRHandle.write(reinterpret_cast<const char *>(&item), DIRECTORY_ENTRY_SIZE);
 	}
-	else if (m_IMGVersion == VERSION2)
+	else if (m_IMGVersion == IMGVersion::VERSION2)
 	{
 		m_IMGHandle.seek(8 + index * DIRECTORY_ENTRY_SIZE);
 		m_IMGHandle.write(reinterpret_cast<const char *>(&item), DIRECTORY_ENTRY_SIZE);

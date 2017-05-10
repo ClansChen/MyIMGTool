@@ -18,8 +18,8 @@ class MYIMGTOOL : public QMainWindow
 public:
 	MYIMGTOOL(QWidget *parent = nullptr);
 
-    void CreateVersion1IMG();
-    void CreateVersion2IMG();
+	void CreateVersion1IMG();
+	void CreateVersion2IMG();
 	void OpenIMG(const QString &);
 	void OpenIMGDialog();
 	void CloseIMG();

@@ -1,7 +1,6 @@
 ﻿#pragma once
 #include <QFile>
-#include <vector>
-#include <memory>
+#include <QVector>
 #include <QModelIndexList>
 #include <initializer_list>
 
@@ -10,7 +9,6 @@ class IMGClass :public QObject
 	Q_OBJECT
 
 public:
-#pragma pack(push, 1)
 	struct IMGDirectoryEntry
 	{
 		quint32 m_Offset;
@@ -18,17 +16,8 @@ public:
 		quint16 m_SizeHigh16 = 0;
 		char m_Name[24];
 	};
-#pragma pack(pop)
 
-	struct IMGDirectoryEntryWrap
-	{
-		quint32 m_NameHash;
-		IMGDirectoryEntry m_RawData;
-
-		IMGDirectoryEntryWrap(const IMGDirectoryEntry &raw);
-	};
-
-	enum IMGVersion
+	enum class IMGVersion
 	{
 		UNDEFINED,
 		VERSION1,
@@ -41,7 +30,8 @@ public:
 	static const qint64 DIRECTORY_ENTRY_SIZE = 32;
 	static const quint32 INVALID_OFFSET = 0xFFFFFFFF;
 
-	IMGClass(std::shared_ptr<std::vector<IMGDirectoryEntryWrap> > source, QObject *parent = nullptr);
+	explicit IMGClass(QObject *parent = nullptr);
+
 	IMGClass(const IMGClass &) = delete;
 	IMGClass &operator=(const IMGClass &) = delete;
 
@@ -53,17 +43,18 @@ public:
 	void RemoveFiles(const QModelIndexList &indexes);
 	void RebuildIMG();
 
+	const std::vector<IMGDirectoryEntry> &GetDirectory() const { return m_IMGDirectory; }
 	IMGVersion	GetIMGVersion(){ return m_IMGVersion; }
-	quint32		GetFilesCount(){ return m_pIMGDirectory->size(); }
+	quint32		GetFilesCount(){ return m_IMGDirectory.size(); }
 	QString		GetIMGFullPath(){ return m_IMGHandle.fileName(); }
 
 private:
 	QFile m_IMGHandle;
 	QFile m_DIRHandle;
 
-	std::shared_ptr<std::vector<IMGDirectoryEntryWrap> > m_pIMGDirectory;
+	std::vector<IMGDirectoryEntry> m_IMGDirectory;
 
-	IMGVersion m_IMGVersion = UNDEFINED;
+	IMGVersion m_IMGVersion = IMGVersion::UNDEFINED;
 
 	quint32 m_Version2IMGDirectoryFreeSlotsCount;
 

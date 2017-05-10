@@ -21,10 +21,10 @@ MYIMGTOOL::MYIMGTOOL(QWidget *parent)
 	ui.action_new_ver1->setIcon(QIcon(":/MyIMGTool/Resources/vc.png"));
 	ui.action_new_ver2->setIcon(QIcon(":/MyIMGTool/Resources/sa.png"));
 
-	auto p = std::make_shared<std::vector<IMGClass::IMGDirectoryEntryWrap> >();
+	m_pIMGClass = new IMGClass(this);
+	m_pTableModel = new IMGTableModel(this);
 
-	m_pIMGClass = new IMGClass(p, this);
-	m_pTableModel = new IMGTableModel(p, this);
+	m_pTableModel->setDataSource(&m_pIMGClass->GetDirectory());
 
 	m_pProxyModel = new QSortFilterProxyModel(this);
 	m_pProxyModel->setFilterKeyColumn(0);
@@ -71,11 +71,11 @@ void MYIMGTOOL::SetWindowIconByIMGVersion()
 {
 	switch (m_pIMGClass->GetIMGVersion())
 	{
-	case IMGClass::VERSION1:
+	case IMGClass::IMGVersion::VERSION1:
 		setWindowIcon(QIcon(":/MyIMGTool/Resources/vc.png"));
 		break;
 
-	case IMGClass::VERSION2:
+	case IMGClass::IMGVersion::VERSION2:
 		setWindowIcon(QIcon(":/MyIMGTool/Resources/sa.png"));
 		break;
 
@@ -92,7 +92,7 @@ void MYIMGTOOL::CreateVersion1IMG()
 	if (imgpath.isEmpty())
 		return;
 
-	if (m_pIMGClass->CreateIMG(imgpath, IMGClass::VERSION1))
+	if (m_pIMGClass->CreateIMG(imgpath, IMGClass::IMGVersion::VERSION1))
 		OpenIMG(imgpath);
 }
 
@@ -103,7 +103,7 @@ void MYIMGTOOL::CreateVersion2IMG()
 	if (imgpath.isEmpty())
 		return;
 
-	if (m_pIMGClass->CreateIMG(imgpath, IMGClass::VERSION2))
+	if (m_pIMGClass->CreateIMG(imgpath, IMGClass::IMGVersion::VERSION2))
 		OpenIMG(imgpath);
 }
 
@@ -333,7 +333,7 @@ void MYIMGTOOL::IncProgressBar()
 
 void MYIMGTOOL::UpdateStatusBarTips()
 {
-	if (m_pIMGClass->GetIMGVersion() == IMGClass::UNDEFINED || m_pProxyModel->rowCount() == 0)
+	if (m_pIMGClass->GetIMGVersion() == IMGClass::IMGVersion::UNDEFINED || m_pProxyModel->rowCount() == 0)
 	{
 		m_pStatusBarTips->clear();
 		return;

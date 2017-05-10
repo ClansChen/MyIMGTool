@@ -2,8 +2,8 @@
 
 #include "IMGTableModel.h"
 
-IMGTableModel::IMGTableModel(std::shared_ptr<std::vector<IMGClass::IMGDirectoryEntryWrap> > source, QObject *parent)
-	:QAbstractTableModel(parent), m_pIMGDirectory(source)
+IMGTableModel::IMGTableModel(QObject *parent)
+	:QAbstractTableModel(parent)
 {
 }
 
@@ -46,13 +46,13 @@ QVariant IMGTableModel::data(const QModelIndex &index, int role) const
 		switch (index.column())
 		{
 		case 0:
-			return m_pIMGDirectory->at(index.row()).m_RawData.m_Name;
+			return m_pIMGDirectory->at(index.row()).m_Name;
 		case 1:
-			return m_pIMGDirectory->at(index.row()).m_RawData.m_SizeLow16 * IMGClass::IMG_BLOCK_SIZE / 1024;
+			return m_pIMGDirectory->at(index.row()).m_SizeLow16 * IMGClass::IMG_BLOCK_SIZE / 1024;
 		case 2:
 			return index.row();
 		case 3:
-			return m_pIMGDirectory->at(index.row()).m_RawData.m_Offset * IMGClass::IMG_BLOCK_SIZE;
+			return m_pIMGDirectory->at(index.row()).m_Offset * IMGClass::IMG_BLOCK_SIZE;
 
 		default:
 			break;
@@ -74,3 +74,9 @@ void IMGTableModel::RefreshView()
 	beginResetModel();
 	endResetModel();
 }
+
+void IMGTableModel::setDataSource(const std::vector<IMGClass::IMGDirectoryEntry> *source)
+{
+	m_pIMGDirectory = source;
+}
+
