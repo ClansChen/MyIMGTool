@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/MyIMGTool">
-        <file>Resources/sa.png</file>
-        <file>Resources/vc.png</file>
-        <file>Resources/myimgtool.png</file>
-    </qresource>
-</RCC>
